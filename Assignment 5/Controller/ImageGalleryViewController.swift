@@ -148,19 +148,15 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     }
     //MARK: - numOfItemsInSection
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            print(tableCount)
+           print(tableCount)
             return tableCount
     }
     
     //MARK: - cellForItem
-    var cell = UICollectionViewCell() {
-        didSet{
-            imageGalleryCollectionView.reloadData()
-        }
-    }
+  
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-        self.cell = cell
+        
         
         if let imageCell = cell as? ImageGalleryCollectionViewCell{
             imageURL = Bundle.main.url(forResource: images[DictionaryKey]?[indexPath.row] , withExtension: "jpg")
