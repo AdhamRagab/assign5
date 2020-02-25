@@ -19,7 +19,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g6g-Cn-qIV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-906" y="742"/>
+            <point key="canvasLocation" x="-400" y="742"/>
         </scene>
         <!--Image Gallery Table View Controller-->
         <scene sceneID="UIb-Gk-YN7">
@@ -37,6 +37,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="showDetail" identifier="chooseGallery" id="04H-LJ-z7F"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -150,7 +153,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="308.6330935251799" y="741.9064748201439"/>
+            <point key="canvasLocation" x="1116" y="742"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="gJF-x5-Crc">
@@ -171,4 +174,7 @@
             <point key="canvasLocation" x="309" y="-124"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="04H-LJ-z7F"/>
+    </inferredMetricsTieBreakers>
 </document>

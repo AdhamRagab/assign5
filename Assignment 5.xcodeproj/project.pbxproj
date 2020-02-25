@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E6D48C924052A43002399C1 /* field4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48C424052A42002399C1 /* field4.jpg */; };
+		8E6D48CA24052A43002399C1 /* field3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48C524052A43002399C1 /* field3.jpg */; };
+		8E6D48CB24052A43002399C1 /* field1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48C624052A43002399C1 /* field1.jpg */; };
+		8E6D48CC24052A43002399C1 /* field2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48C724052A43002399C1 /* field2.jpg */; };
+		8E6D48CD24052A43002399C1 /* field5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48C824052A43002399C1 /* field5.jpg */; };
+		8E6D48D324052B63002399C1 /* cr7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48CE24052B63002399C1 /* cr7.jpg */; };
+		8E6D48D424052B63002399C1 /* mosalah.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48CF24052B63002399C1 /* mosalah.jpg */; };
+		8E6D48D524052B63002399C1 /* ibra.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48D024052B63002399C1 /* ibra.jpg */; };
+		8E6D48D624052B63002399C1 /* messi.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48D124052B63002399C1 /* messi.jpg */; };
+		8E6D48D724052B63002399C1 /* son.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8E6D48D224052B63002399C1 /* son.jpg */; };
 		8E708D162403E36C005F6367 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E708D152403E36C005F6367 /* AppDelegate.swift */; };
 		8E708D182403E36C005F6367 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E708D172403E36C005F6367 /* SceneDelegate.swift */; };
 		8E708D1D2403E36C005F6367 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E708D1B2403E36C005F6367 /* Main.storyboard */; };
@@ -26,6 +36,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E6D48C424052A42002399C1 /* field4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = field4.jpg; sourceTree = "<group>"; };
+		8E6D48C524052A43002399C1 /* field3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = field3.jpg; sourceTree = "<group>"; };
+		8E6D48C624052A43002399C1 /* field1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = field1.jpg; sourceTree = "<group>"; };
+		8E6D48C724052A43002399C1 /* field2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = field2.jpg; sourceTree = "<group>"; };
+		8E6D48C824052A43002399C1 /* field5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = field5.jpg; sourceTree = "<group>"; };
+		8E6D48CE24052B63002399C1 /* cr7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cr7.jpg; sourceTree = "<group>"; };
+		8E6D48CF24052B63002399C1 /* mosalah.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = mosalah.jpg; sourceTree = "<group>"; };
+		8E6D48D024052B63002399C1 /* ibra.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ibra.jpg; sourceTree = "<group>"; };
+		8E6D48D124052B63002399C1 /* messi.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = messi.jpg; sourceTree = "<group>"; };
+		8E6D48D224052B63002399C1 /* son.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = son.jpg; sourceTree = "<group>"; };
 		8E708D122403E36C005F6367 /* Assignment 5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Assignment 5.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E708D152403E36C005F6367 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E708D172403E36C005F6367 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +97,22 @@
 			isa = PBXGroup;
 			children = (
 				8E708D1E2403E370005F6367 /* Assets.xcassets */,
+				8E6D48C624052A43002399C1 /* field1.jpg */,
+				8E6D48CE24052B63002399C1 /* cr7.jpg */,
+				8E6D48D024052B63002399C1 /* ibra.jpg */,
+				8E6D48D124052B63002399C1 /* messi.jpg */,
+				8E6D48CF24052B63002399C1 /* mosalah.jpg */,
+				8E6D48D224052B63002399C1 /* son.jpg */,
+				8E6D48C724052A43002399C1 /* field2.jpg */,
+				8E6D48C524052A43002399C1 /* field3.jpg */,
+				8E6D48C424052A42002399C1 /* field4.jpg */,
+				8E6D48C824052A43002399C1 /* field5.jpg */,
+				8E708D38240400E8005F6367 /* oval.jpg */,
+				8E708D3A240400EF005F6367 /* mars.jpg */,
+				8E708D3C240400F5005F6367 /* moon.jpg */,
+				8E708D3E24040105005F6367 /* horizon.jpg */,
+				8E708D402404010B005F6367 /* lake.jpg */,
+				8E708D4224040114005F6367 /* sat.jpg */,
 				8E708D232403E370005F6367 /* Info.plist */,
 				8E708D312403E918005F6367 /* Supporting Files */,
 				8E708D352403EB44005F6367 /* utilities */,
@@ -126,12 +162,6 @@
 		8E708D352403EB44005F6367 /* utilities */ = {
 			isa = PBXGroup;
 			children = (
-				8E708D38240400E8005F6367 /* oval.jpg */,
-				8E708D3A240400EF005F6367 /* mars.jpg */,
-				8E708D3C240400F5005F6367 /* moon.jpg */,
-				8E708D3E24040105005F6367 /* horizon.jpg */,
-				8E708D402404010B005F6367 /* lake.jpg */,
-				8E708D4224040114005F6367 /* sat.jpg */,
 				8E708D292403E75E005F6367 /* Utilities.swift */,
 			);
 			path = utilities;
@@ -196,14 +226,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				8E708D222403E370005F6367 /* LaunchScreen.storyboard in Resources */,
+				8E6D48CA24052A43002399C1 /* field3.jpg in Resources */,
+				8E6D48CC24052A43002399C1 /* field2.jpg in Resources */,
 				8E708D39240400E8005F6367 /* oval.jpg in Resources */,
 				8E708D412404010B005F6367 /* lake.jpg in Resources */,
 				8E708D3D240400F5005F6367 /* moon.jpg in Resources */,
 				8E708D3B240400EF005F6367 /* mars.jpg in Resources */,
+				8E6D48D724052B63002399C1 /* son.jpg in Resources */,
 				8E708D4324040114005F6367 /* sat.jpg in Resources */,
+				8E6D48CD24052A43002399C1 /* field5.jpg in Resources */,
+				8E6D48D624052B63002399C1 /* messi.jpg in Resources */,
 				8E708D1F2403E370005F6367 /* Assets.xcassets in Resources */,
+				8E6D48C924052A43002399C1 /* field4.jpg in Resources */,
 				8E708D1D2403E36C005F6367 /* Main.storyboard in Resources */,
+				8E6D48D324052B63002399C1 /* cr7.jpg in Resources */,
+				8E6D48CB24052A43002399C1 /* field1.jpg in Resources */,
 				8E708D3F24040105005F6367 /* horizon.jpg in Resources */,
+				8E6D48D424052B63002399C1 /* mosalah.jpg in Resources */,
+				8E6D48D524052B63002399C1 /* ibra.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

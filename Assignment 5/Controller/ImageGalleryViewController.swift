@@ -11,6 +11,11 @@ import UIKit
 class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, UIScrollViewDelegate , UICollectionViewDelegate , UICollectionViewDataSource {
     
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    }
+    
     
     
     var imageGalleryView = ImageGalleryView()
@@ -70,6 +75,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             }
         }
     }
+    //MARK: - Drop Zone
+    
     @IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
     @IBOutlet weak var scrollViewWidth: NSLayoutConstraint!
     @IBOutlet weak var dropZone: UIView!{
@@ -111,7 +118,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         
     }
     
-    
+    //MARK: - CollectionView
     
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView!{
         didSet{
@@ -120,21 +127,44 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             
         }
     }
-    
-    var images = ["oval","mars","moon","horizon","lake","sat"]
     var imageURL : URL?
-    
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count
+    var DictionaryKey = String() {
+        didSet{
+            if let dictcount = images[DictionaryKey]?.count {
+                tableCount = dictcount
+            }
+        }
     }
     
+    private  var tableCount = 0
+    
+    var images = ["Space":["oval","mars","moon","horizon","lake","sat"],
+                  "Fields":["field1","field2","field3","field4","field5"],
+                  "FootballPlayers":["mosalah","messi","cr7","ibra","son"]
+    ]
+    
+    override func viewWillLayoutSubviews() {
+        
+    }
+    //MARK: - numOfItemsInSection
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            print(tableCount)
+            return tableCount
+    }
+    
+    //MARK: - cellForItem
+    var cell = UICollectionViewCell() {
+        didSet{
+            imageGalleryCollectionView.reloadData()
+        }
+    }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
+        self.cell = cell
         
         if let imageCell = cell as? ImageGalleryCollectionViewCell{
-            
-            imageURL = Bundle.main.url(forResource: images[indexPath.item], withExtension: "jpg")
+            imageURL = Bundle.main.url(forResource: images[DictionaryKey]?[indexPath.row] , withExtension: "jpg")
+        
             if let url = imageURL {
                 DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
                     let urlContent = try? Data(contentsOf: url)
@@ -144,10 +174,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                             collectionView.reloadData()
                         }
                     }
-                    
                 }
             }
-            
         }
         return cell
         
