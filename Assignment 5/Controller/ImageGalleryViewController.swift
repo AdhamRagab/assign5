@@ -8,7 +8,11 @@
 
 import UIKit
 
-class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, UIScrollViewDelegate , UICollectionViewDelegate , UICollectionViewDataSource {
+class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, UIScrollViewDelegate , UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+    
+    
+    
+    
     
     
     override func viewDidLoad() {
@@ -124,7 +128,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         didSet{
             imageGalleryCollectionView.delegate = self
             imageGalleryCollectionView.dataSource = self
-            
+            imageGalleryCollectionView.dragDelegate = self
+            imageGalleryCollectionView.dropDelegate = self
         }
     }
     var imageURL : URL?
@@ -132,6 +137,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         didSet{
             if let dictcount = images[DictionaryKey]?.count {
                 tableCount = dictcount
+                
             }
         }
     }
@@ -143,37 +149,89 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                   "FootballPlayers":["mosalah","messi","cr7","ibra","son"]
     ]
     
-    override func viewWillLayoutSubviews() {
-        
-    }
+    
+    
     //MARK: - numOfItemsInSection
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-           print(tableCount)
-            return tableCount
+        return tableCount
     }
     
     //MARK: - cellForItem
-  
+    
+    var flowLayout : UICollectionViewFlowLayout?{
+        return imageGalleryCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout
+    }
+    
+    override func viewDidLayoutSubviews() {
+        flowLayout?.invalidateLayout()
+    }
+            
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        print("inside collectionView",images[DictionaryKey]![indexPath.row])
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
         
-        
         if let imageCell = cell as? ImageGalleryCollectionViewCell{
-            imageURL = Bundle.main.url(forResource: images[DictionaryKey]?[indexPath.row] , withExtension: "jpg")
-        
+            imageURL = Bundle.main.url(forResource: images[DictionaryKey]![indexPath.row], withExtension: "jpg")
+            
             if let url = imageURL {
                 DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
                     let urlContent = try? Data(contentsOf: url)
                     DispatchQueue.main.async {
                         if let imageData = urlContent , url == self?.imageURL {
                             imageCell.uiImage.image = UIImage(data: imageData)
-                            collectionView.reloadData()
+                            imageCell.layoutIfNeeded()
+                            imageCell.layer.masksToBounds = true
                         }
                     }
                 }
+                
             }
         }
+      
         return cell
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        session.localContext = collectionView
+        if let image = (imageGalleryCollectionView.cellForItem(at: indexPath) as? ImageGalleryCollectionViewCell)?.uiImage.image{
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
+            dragItem.localObject = image
+            return [dragItem]
+        }else{
+            return []
+        }
+    }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        return session.canLoadObjects(ofClass: UIImage.self) || session.canLoadObjects(ofClass: NSURL.self)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        let isSelf = (session.localDragSession?.localContext as? UICollectionView) == collectionView
+        return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
+        for item in coordinator.items {
+            if let sourceIndexPath = item.sourceIndexPath{
+                if let image = item.dragItem.localObject as? UIImage {
+                    collectionView.performBatchUpdates({
+                        images[DictionaryKey]!.remove(at: sourceIndexPath.item)
+                        images[DictionaryKey]!.insert(images[DictionaryKey]![sourceIndexPath.row], at: destinationIndexPath.item)
+                        collectionView.deleteItems(at: [sourceIndexPath])
+                        collectionView.insertItems(at: [destinationIndexPath])
+                    })
+                    coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+                }
+            }
+        }
         
     }
     

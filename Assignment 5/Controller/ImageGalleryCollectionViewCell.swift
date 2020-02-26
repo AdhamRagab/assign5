@@ -11,6 +11,11 @@ import UIKit
 class ImageGalleryCollectionViewCell: UICollectionViewCell {
     
     
-    @IBOutlet weak var uiImage: UIImageView!
+    @IBOutlet weak var uiImage: UIImageView!{
+        didSet{
+        setNeedsDisplay()
+        setNeedsLayout()
+        }
+    }
     
 }
