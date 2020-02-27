@@ -10,12 +10,23 @@ import UIKit
 
 class ImageGalleryCollectionViewCell: UICollectionViewCell {
     
+    var image : UIImage?{
+        get {
+            return uiImage.image
+        }
+        set{
+            uiImage.image = newValue
+            uiImage.sizeToFit()
+            
+        }
+    }
     
     @IBOutlet weak var uiImage: UIImageView!{
         didSet{
-        setNeedsDisplay()
-        setNeedsLayout()
+            setNeedsDisplay()
+            setNeedsLayout()
         }
     }
+    
     
 }

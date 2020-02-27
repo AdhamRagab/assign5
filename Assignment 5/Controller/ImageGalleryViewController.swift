@@ -11,16 +11,10 @@ import UIKit
 class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, UIScrollViewDelegate , UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
     
-    
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
     }
-    
-    
     
     var imageGalleryView = ImageGalleryView()
     @IBOutlet weak var scrollView: UIScrollView!{
@@ -144,10 +138,9 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     
     private  var tableCount = 0
     
-    var images = ["Space":["oval","mars","moon","horizon","lake","sat"],
-                  "Fields":["field1","field2","field3","field4","field5"],
-                  "FootballPlayers":["mosalah","messi","cr7","ibra","son"]
-    ]
+    var images = ["Space":[#imageLiteral(resourceName: "oval.jpg"),#imageLiteral(resourceName: "sat.jpg"),#imageLiteral(resourceName: "moon.jpg"),#imageLiteral(resourceName: "lake.jpg"),#imageLiteral(resourceName: "mars.jpg")],
+                  "Fields":[#imageLiteral(resourceName: "field1"),#imageLiteral(resourceName: "field2.jpg"),#imageLiteral(resourceName: "field3.jpg"),#imageLiteral(resourceName: "field4.jpg"),#imageLiteral(resourceName: "field5.jpg")],
+                  "FootballPlayers":[#imageLiteral(resourceName: "mosalah.jpg"),#imageLiteral(resourceName: "messi.jpg"),#imageLiteral(resourceName: "son.jpg"),#imageLiteral(resourceName: "ibra.jpg"),#imageLiteral(resourceName: "cr7.jpg")]]
     
     
     
@@ -162,35 +155,26 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         return imageGalleryCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout
     }
     
-    override func viewDidLayoutSubviews() {
-        flowLayout?.invalidateLayout()
-    }
-            
+    //    override func viewDidLayoutSubviews() {
+    //        flowLayout?.invalidateLayout()
+    //    }
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        print("inside collectionView",images[DictionaryKey]![indexPath.row])
+        
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
         
         if let imageCell = cell as? ImageGalleryCollectionViewCell{
-            imageURL = Bundle.main.url(forResource: images[DictionaryKey]![indexPath.row], withExtension: "jpg")
             
-            if let url = imageURL {
-                DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
-                    let urlContent = try? Data(contentsOf: url)
-                    DispatchQueue.main.async {
-                        if let imageData = urlContent , url == self?.imageURL {
-                            imageCell.uiImage.image = UIImage(data: imageData)
-                            imageCell.layoutIfNeeded()
-                            imageCell.layer.masksToBounds = true
-                        }
-                    }
-                }
-                
-            }
+            imageCell.uiImage.image = images[DictionaryKey]![indexPath.row]
+            //            fetchImage(forArr: DictionaryKey, forCell: imageCell, for: indexPath)
+            print(imageCell.uiImage.image)
+            imageCell.uiImage.layoutIfNeeded()
+            imageCell.uiImage.layer.masksToBounds = true
         }
-      
+        
         return cell
         
     }
@@ -224,16 +208,50 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                 if let image = item.dragItem.localObject as? UIImage {
                     collectionView.performBatchUpdates({
                         images[DictionaryKey]!.remove(at: sourceIndexPath.item)
-                        images[DictionaryKey]!.insert(images[DictionaryKey]![sourceIndexPath.row], at: destinationIndexPath.item)
+                        images[DictionaryKey]!.insert(image, at: destinationIndexPath.item)
+                        
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
+                        
                     })
                     coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
                 }
             }
+                        else {
+                            let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceHolderCell"))
+                            item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
+                                if let image = provider as? UIImage {
+                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self.images[self.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
+                                    }
+                                }else{
+                                    placeHolderContext.deletePlaceholder()
+                                }
+                            }
+                        }
         }
         
     }
+    
+//        func fetchImage (forArr DictKey: String , forCell cell: ImageGalleryCollectionViewCell , for indexPath: IndexPath) {
+//
+//
+//            imageURL = Bundle.main.url(forResource: images[DictKey]![indexPath.row], withExtension: "jpg")
+//
+//                   if let url = imageURL {
+//                       DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
+//                           let urlContent = try? Data(contentsOf: url)
+//                           DispatchQueue.main.async {
+//                               if let imageData = urlContent , url == self?.imageURL {
+//                                print(UIImage(data:imageData))
+//                                cell.uiImage.image = UIImage(data: imageData)
+//                                self?.imageGalleryView.setNeedsDisplay()
+//                                self?.imageGalleryView.setNeedsLayout()
+//                               }
+//                           }
+//                       }
+//
+//                   }
+//        }
     
     
     
