@@ -155,29 +155,22 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         return imageGalleryCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout
     }
     
-    //    override func viewDidLayoutSubviews() {
-    //        flowLayout?.invalidateLayout()
-    //    }
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-        
         if let imageCell = cell as? ImageGalleryCollectionViewCell{
-            
             imageCell.uiImage.image = images[DictionaryKey]![indexPath.row]
             //            fetchImage(forArr: DictionaryKey, forCell: imageCell, for: indexPath)
-            print(imageCell.uiImage.image)
-            imageCell.uiImage.layoutIfNeeded()
-            imageCell.uiImage.layer.masksToBounds = true
+            
         }
         
         return cell
         
     }
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         session.localContext = collectionView
@@ -201,6 +194,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
     }
     
+    var url: URL?
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         for item in coordinator.items {
@@ -209,7 +203,6 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                     collectionView.performBatchUpdates({
                         images[DictionaryKey]!.remove(at: sourceIndexPath.item)
                         images[DictionaryKey]!.insert(image, at: destinationIndexPath.item)
-                        
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                         
@@ -217,42 +210,92 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                     coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
                 }
             }
-                        else {
-                            let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceHolderCell"))
-                            item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
-                                if let image = provider as? UIImage {
-                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self.images[self.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
+            else {
+                let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceHolderCell"))
+                item.dragItem.itemProvider.loadObject(ofClass: NSURL.self) { [weak self] (provider, error) in
+                    
+                    self?.url = provider as? URL
+                    
+                    if self?.url != nil{
+                        
+                        
+                        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                            guard let data = try? Data(contentsOf: (self?.url!.imageURL)!) else {
+                                return
+                            }
+                            
+                            guard let image = UIImage(data: data) else {
+                                print("Couldn't convert data to UIImage")
+                                print("The url is")
+                                print(self!.url!.imageURL)
+                                return
+                            }
+                            
+                            // If by the time the async. fetch finishes, the imageURL is still the same, update the UI (in the main queue)
+                            DispatchQueue.main.async {
+                                collectionView.performBatchUpdates({
+                                    // Update model
+                                    
+                                    // Update view
+                                    placeHolderContext.commitInsertion { (insertionIndexPath) in
+                                        self?.images[self!.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
+                                         coordinator.drop(item.dragItem, toItemAt: insertionIndexPath)
                                     }
-                                }else{
-                                    placeHolderContext.deletePlaceholder()
-                                }
+                                    
+                                    
+                                    // Animates the item to the specified index path in the collection view.
+                                    
+                                    
+                                })
                             }
                         }
+                        
+                        
+                    }
+                    
+                    
+                    //                                if let image = provider as? UIImage {
+                    //                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self.images[self.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
+                    //                                    }
+                    //                                }else{
+                    //                                    placeHolderContext.deletePlaceholder()
+                    //                                }
+                }
+            }
         }
         
     }
     
-//        func fetchImage (forArr DictKey: String , forCell cell: ImageGalleryCollectionViewCell , for indexPath: IndexPath) {
-//
-//
-//            imageURL = Bundle.main.url(forResource: images[DictKey]![indexPath.row], withExtension: "jpg")
-//
-//                   if let url = imageURL {
-//                       DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
-//                           let urlContent = try? Data(contentsOf: url)
-//                           DispatchQueue.main.async {
-//                               if let imageData = urlContent , url == self?.imageURL {
-//                                print(UIImage(data:imageData))
-//                                cell.uiImage.image = UIImage(data: imageData)
-//                                self?.imageGalleryView.setNeedsDisplay()
-//                                self?.imageGalleryView.setNeedsLayout()
-//                               }
-//                           }
-//                       }
-//
-//                   }
-//        }
+    //        func fetchImage (forArr DictKey: String , forCell cell: ImageGalleryCollectionViewCell , for indexPath: IndexPath) {
+    //
+    //
+    //            imageURL = Bundle.main.url(forResource: images[DictKey]![indexPath.row], withExtension: "jpg")
+    //
+    //                   if let url = imageURL {
+    //                       DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
+    //                           let urlContent = try? Data(contentsOf: url)
+    //                           DispatchQueue.main.async {
+    //                               if let imageData = urlContent , url == self?.imageURL {
+    //                                print(UIImage(data:imageData))
+    //                                cell.uiImage.image = UIImage(data: imageData)
+    //                                self?.imageGalleryView.setNeedsDisplay()
+    //                                self?.imageGalleryView.setNeedsLayout()
+    //                               }
+    //                           }
+    //                       }
+    //
+    //                   }
+    //        }
     
+    
+    
+}
+
+extension UIImage {
+    func getImageRatio() -> CGFloat{
+        let imageRatio = CGFloat(self.size.width/self.size.height)
+        return imageRatio
+    }
     
     
 }
