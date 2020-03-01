@@ -53,7 +53,6 @@ class ImageGalleryCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var uiImage: UIImageView!{
         didSet{
-            uiImage.translatesAutoresizingMaskIntoConstraints = false
             setNeedsDisplay()
             setNeedsLayout()
         }

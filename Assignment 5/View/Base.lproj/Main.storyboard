@@ -59,20 +59,49 @@
             </objects>
             <point key="canvasLocation" x="1116" y="-124"/>
         </scene>
-        <!--View Controller-->
+        <!--Image View Controller-->
         <scene sceneID="40b-5g-gNX">
             <objects>
-                <viewController id="ChK-gm-OQT" sceneMemberID="viewController">
+                <viewController id="ChK-gm-OQT" customClass="ImageViewController" customModule="Assignment_5" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rAz-jJ-ygu">
-                        <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
+                        <rect key="frame" x="0.0" y="0.0" width="791.5" height="834"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M88-y7-kkA">
+                                <rect key="frame" x="0.0" y="0.0" width="791.5" height="834"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZ9-He-WB3">
+                                        <rect key="frame" x="0.0" y="0.0" width="792" height="834"/>
+                                        <viewLayoutGuide key="contentLayoutGuide" id="FEe-Uw-TzI"/>
+                                        <viewLayoutGuide key="frameLayoutGuide" id="JRE-GU-2VT"/>
+                                    </scrollView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="gZ9-He-WB3" firstAttribute="trailing" secondItem="M88-y7-kkA" secondAttribute="trailing" constant="20" symbolic="YES" id="5MZ-Pb-aQF"/>
+                                    <constraint firstItem="gZ9-He-WB3" firstAttribute="top" secondItem="M88-y7-kkA" secondAttribute="top" constant="20" symbolic="YES" id="Ajq-KN-Ecy"/>
+                                    <constraint firstItem="gZ9-He-WB3" firstAttribute="leading" secondItem="M88-y7-kkA" secondAttribute="leading" constant="20" symbolic="YES" id="GT6-Jh-jSF"/>
+                                    <constraint firstItem="gZ9-He-WB3" firstAttribute="bottom" secondItem="M88-y7-kkA" secondAttribute="bottom" id="Ury-D3-jp3"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="q0c-Wi-3q2" firstAttribute="bottom" secondItem="M88-y7-kkA" secondAttribute="bottom" id="Ml0-pJ-kLi"/>
+                            <constraint firstItem="q0c-Wi-3q2" firstAttribute="trailing" secondItem="M88-y7-kkA" secondAttribute="trailing" id="dfv-E0-GP2"/>
+                            <constraint firstItem="M88-y7-kkA" firstAttribute="leading" secondItem="q0c-Wi-3q2" secondAttribute="leading" id="rYr-bk-jXD"/>
+                            <constraint firstItem="M88-y7-kkA" firstAttribute="top" secondItem="q0c-Wi-3q2" secondAttribute="top" id="rsn-N9-J7f"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="q0c-Wi-3q2"/>
                     </view>
+                    <navigationItem key="navigationItem" id="nLF-lt-2f3"/>
+                    <connections>
+                        <outlet property="scrollView" destination="gZ9-He-WB3" id="Pcn-2O-NYf"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tLA-n6-MNK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1224" y="716"/>
+            <point key="canvasLocation" x="1151.9784172661871" y="741.726618705036"/>
         </scene>
         <!--Image Gallery View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -89,7 +118,7 @@
                                         <rect key="frame" x="20" y="20" width="791.5" height="814"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="si3-1P-zRt">
-                                                <rect key="frame" x="20" y="20" width="791.5" height="794"/>
+                                                <rect key="frame" x="20" y="20" width="750" height="794"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="VPa-sZ-g5q">
                                                     <size key="itemSize" width="150" height="140"/>
@@ -122,6 +151,7 @@
                                                         <size key="customSize" width="150" height="140"/>
                                                         <connections>
                                                             <outlet property="uiImage" destination="7ue-Ya-J7l" id="PYo-PI-kIa"/>
+                                                            <segue destination="ChK-gm-OQT" kind="show" identifier="ShowImage" id="VR9-jG-03h"/>
                                                         </connections>
                                                     </collectionViewCell>
                                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="DropPlaceHolderCell" id="iHy-Ew-uGQ">
@@ -137,7 +167,7 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="si3-1P-zRt" firstAttribute="trailing" secondItem="8i3-py-8lT" secondAttribute="trailing" constant="20" symbolic="YES" id="7Qh-Zv-gCA"/>
+                                            <constraint firstItem="si3-1P-zRt" firstAttribute="trailing" secondItem="8i3-py-8lT" secondAttribute="trailing" constant="-21.5" id="7Qh-Zv-gCA"/>
                                             <constraint firstItem="si3-1P-zRt" firstAttribute="bottom" secondItem="8i3-py-8lT" secondAttribute="bottom" id="ReC-Fb-PId"/>
                                             <constraint firstItem="si3-1P-zRt" firstAttribute="top" secondItem="8i3-py-8lT" secondAttribute="top" constant="20" symbolic="YES" id="Wrg-yt-Kv2"/>
                                             <constraint firstItem="si3-1P-zRt" firstAttribute="leading" secondItem="8i3-py-8lT" secondAttribute="leading" constant="20" symbolic="YES" id="e6s-v7-c35"/>

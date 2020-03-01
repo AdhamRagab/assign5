@@ -12,9 +12,16 @@ class ImageGalleryTableViewController: UITableViewController {
     
     let galleryController = ImageGalleryViewController()
     
+    
     @IBAction func AddItem(_ sender: UIBarButtonItem) {
-        tableSections[0] += ["Image Gallery".madeUnique(withRespectTo: tableSections[0])]
+        tableSections[0] += ["Image Gallery".madeUnique(withRespectTo: tableSections[0] as! [String])]
+        let newItem = tableSections[0].last
+        print(newItem!)
+        galleryController.gallery.gallery?[newItem as! String] = []
+        
+//        print(gallery.gallery?[(tableSections[0].last as? String)!])
         tableView.reloadData()
+        
     }
     
     var deletedItem = ""
@@ -25,10 +32,7 @@ class ImageGalleryTableViewController: UITableViewController {
         self.title = "Image Galleries"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-    var tableSections = [
-        ["Space" , "Fields" , "FootballPlayers"],
-        ["DeletedOne" ,"DTwo", "DThree"]
-    ]
+    var tableSections = [ [] , [] ]
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -52,7 +56,7 @@ class ImageGalleryTableViewController: UITableViewController {
         
         let gallery = tableSections[indexPath.section][indexPath.row]
         
-        cell.textLabel?.text = gallery
+        cell.textLabel?.text = gallery as? String
         
         
         return cell
@@ -85,7 +89,7 @@ class ImageGalleryTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if indexPath.section == 0 {
-                deletedItem = tableSections[0][indexPath.row]
+                deletedItem = (tableSections[0][indexPath.row] as? String)!
                 tableSections[0].remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 tableSections[1] += [deletedItem]
@@ -105,7 +109,7 @@ class ImageGalleryTableViewController: UITableViewController {
         
         if indexPath.section == 1 {
         let recover = UIContextualAction(style: .normal, title: "Recover") { (contextualAction, view, actionPerformed: (Bool) -> ()) in
-            self.recoveredItem = self.tableSections[1][indexPath.row]
+            self.recoveredItem = (self.tableSections[1][indexPath.row] as? String)!
             self.tableSections[1].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             self.tableSections[0] += [self.recoveredItem]
@@ -142,6 +146,7 @@ class ImageGalleryTableViewController: UITableViewController {
             if let galleryName = (sender as? UITableViewCell)?.textLabel {
                 if let cvc = segue.destination as? ImageGalleryViewController{
                     cvc.DictionaryKey = galleryName.text ?? ""
+                    print(cvc.gallery.gallery?[cvc.DictionaryKey])
                 }
             }
         }
