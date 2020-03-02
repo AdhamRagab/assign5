@@ -116,6 +116,22 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         
     }
     
+    private var textFieldObserver: NSObjectProtocol?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        textFieldObserver = NotificationCenter.default.addObserver(
+            forName: UITextField.textDidChangeNotification,
+            object: nil,
+            queue: OperationQueue.main,
+            using: {(notification) in
+                if let info  = notification.userInfo?.values.first {
+                print(info)
+                }
+        })
+    }
+    
+    
     //MARK: - CollectionView
     
     @IBOutlet weak var imageGalleryCollectionView: UICollectionView!{

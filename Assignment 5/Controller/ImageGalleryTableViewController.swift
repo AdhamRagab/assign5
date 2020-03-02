@@ -11,16 +11,38 @@ import UIKit
 class ImageGalleryTableViewController: UITableViewController {
     
     let galleryController = ImageGalleryViewController()
-    
+   
     
     @IBAction func AddItem(_ sender: UIBarButtonItem) {
-        tableSections[0] += ["Image Gallery".madeUnique(withRespectTo: tableSections[0] as! [String])]
-        let newItem = tableSections[0].last
-        print(newItem!)
-        galleryController.gallery.gallery?[newItem as! String] = []
         
-//        print(gallery.gallery?[(tableSections[0].last as? String)!])
-        tableView.reloadData()
+        
+        let alert = UIAlertController(title: "Add new gallery", message: "Please enter the name of the gallery", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Enter the name of the new gallery"
+        }
+        
+        alert.addAction(UIAlertAction(title: "Add gallery", style: .default, handler: { (action) in
+            if let tf = alert.textFields?.first {
+                self.tableSections[0] += [tf.text!]
+                NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: tf, userInfo: [tf : tf.text!])
+                self.tableView.reloadData()
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
+        
+        
+        
+//        tableSections[0] += ["Image Gallery".madeUnique(withRespectTo: tableSections[0] as! [String])]
+//        let newItem = tableSections[0].last
+//        print(newItem!)
+//        galleryController.gallery.gallery?[newItem as! String] = []
+//
+////        print(gallery.gallery?[(tableSections[0].last as? String)!])
+//        tableView.reloadData()
         
     }
     
