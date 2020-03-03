@@ -8,8 +8,10 @@
 
 import UIKit
 class ImageGallery {
-//    var name : String?
-//    var images : [UIImage]?
+    
+    
+    //    var name : String?
+    //    var images : [Image]?
     
     
     //    struct Image {
@@ -20,6 +22,6 @@ class ImageGallery {
     //    }
     
     
-    var gallery : Dictionary<String, [UIImage]>?
+    var gallery : [String : [UIImage]]?
     
 }

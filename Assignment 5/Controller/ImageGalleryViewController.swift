@@ -13,9 +13,10 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       
     }
     
+    var image : UIImage?
     var imageGalleryView = ImageGalleryView()
     @IBOutlet weak var scrollView: UIScrollView!{ 
         didSet{
@@ -73,6 +74,10 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             }
         }
     }
+    
+//    var images = ["FootballPlayers":[#imageLiteral(resourceName: "mosalah.jpg"),#imageLiteral(resourceName: "messi.jpg"),#imageLiteral(resourceName: "ibra.jpg"),#imageLiteral(resourceName: "cr7.jpg"),#imageLiteral(resourceName: "son.jpg")],
+//                  "Fields":[#imageLiteral(resourceName: "field1-1.jpg"),#imageLiteral(resourceName: "field2.jpg"),#imageLiteral(resourceName: "field3.jpg"),#imageLiteral(resourceName: "field4.jpg"),#imageLiteral(resourceName: "field5.jpg")]
+//    ]
     //MARK: - Drop Zone
     
     @IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
@@ -116,6 +121,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         
     }
     
+    
+    
     private var textFieldObserver: NSObjectProtocol?
     
     override func viewWillAppear(_ animated: Bool) {
@@ -126,7 +133,10 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             queue: OperationQueue.main,
             using: {(notification) in
                 if let info  = notification.userInfo?.values.first {
-                print(info)
+                    print(info)
+//                    self.images[info as! String] = []
+//                    print(self.images)
+                    self.gallery.gallery?[info as! String] = []
                 }
         })
     }
@@ -143,17 +153,23 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         }
     }
     var imageURL : URL?
-        var DictionaryKey = String() {
-            didSet{
-                if let dictcount = gallery.gallery?[DictionaryKey]?.count {
-                    tableCount = dictcount
-                }
+    var DictionaryKey = String() {
+        didSet{
+            print(DictionaryKey)
+            if let dictcount = gallery.gallery?[DictionaryKey]?.count {
+                tableCount = dictcount
+                print(tableCount)
             }
         }
+    }
     
     private  var tableCount = 0
     
-    let gallery = ImageGallery()
+    var gallery = ImageGallery(){
+        didSet{
+            tableCount = (gallery.gallery?[DictionaryKey]!.count)!
+        }
+    }
     
     
     //MARK: - numOfItemsInSection
@@ -207,6 +223,10 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         return UICollectionViewDropProposal(operation: isSelf ? .move : .copy, intent: .insertAtDestinationIndexPath)
     }
     
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//           return CGSize(width: , height: screenWidth)
+//       }
+    
     var url: URL?
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
@@ -217,9 +237,9 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                         print(sourceIndexPath)
                         print(destinationIndexPath)
                         gallery.gallery?[DictionaryKey]?.remove(at: sourceIndexPath.item)
+                        
                         gallery.gallery?[DictionaryKey]?.insert(image, at: destinationIndexPath.item)
-                        //                        images[DictionaryKey]!.remove(at: sourceIndexPath.item)
-                        //                        images[DictionaryKey]!.insert(image, at: destinationIndexPath.item)
+                      
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                         
@@ -231,7 +251,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                 let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceHolderCell"))
                 item.dragItem.itemProvider.loadObject(ofClass: NSURL.self) { [weak self] (provider, error) in
                     
-                    self?.url = provider as? URL
+                    
                     
                     if let url = provider as? URL {
                         
@@ -243,20 +263,15 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                             guard let image = UIImage(data: data) else {
                                 print("Couldn't convert data to UIImage")
                                 print("The url is")
-                                print(self!.url!.imageURL)
                                 return
-                            }
-                            
+                        }
                             
                             // If by the time the async. fetch finishes, the imageURL is still the same, update the UI (in the main queue)
                             DispatchQueue.main.async {
                                 collectionView.performBatchUpdates({
-                                    // Update model
-                                    // Update view
-                                    placeHolderContext.commitInsertion { (insertionIndexPath) in
-                                        //                                        self?.images[self!.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
-                                        self?.gallery.gallery?[self!.DictionaryKey]?.insert( image , at: insertionIndexPath.item)
-                                        print(insertionIndexPath.item)
+                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self?.gallery.gallery?[self!.DictionaryKey]?.insert( image , at: insertionIndexPath.item)
+                                        self?.tableCount += 1
+                                        print(self?.gallery.gallery)
                                         coordinator.drop(item.dragItem, toItemAt: insertionIndexPath)
                                     }
                                     
@@ -269,38 +284,14 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                         placeHolderContext.deletePlaceholder()
                     }
                     
-                    //                                if let image = provider as? UIImage {
-                    //                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self.images[self.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
-                    //                                    }
-                    //                                }else{
-                    //                                    placeHolderContext.deletePlaceholder()
-                    //                                }
+                 
                 }
             }
         }
         
     }
     
-    //        func fetchImage (forArr DictKey: String , forCell cell: ImageGalleryCollectionViewCell , for indexPath: IndexPath) {
-    //
-    //
-    //            imageURL = Bundle.main.url(forResource: images[DictKey]![indexPath.row], withExtension: "jpg")
-    //
-    //                   if let url = imageURL {
-    //                       DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
-    //                           let urlContent = try? Data(contentsOf: url)
-    //                           DispatchQueue.main.async {
-    //                               if let imageData = urlContent , url == self?.imageURL {
-    //                                print(UIImage(data:imageData))
-    //                                cell.uiImage.image = UIImage(data: imageData)
-    //                                self?.imageGalleryView.setNeedsDisplay()
-    //                                self?.imageGalleryView.setNeedsLayout()
-    //                               }
-    //                           }
-    //                       }
-    //
-    //                   }
-    //        }
+   
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowImage"{
@@ -324,3 +315,46 @@ extension UIImage {
     
     
 }
+
+
+
+
+
+
+
+
+
+
+
+//        func fetchImage (forArr DictKey: String , forCell cell: ImageGalleryCollectionViewCell , for indexPath: IndexPath) {
+   //
+   //
+   //            imageURL = Bundle.main.url(forResource: images[DictKey]![indexPath.row], withExtension: "jpg")
+   //
+   //                   if let url = imageURL {
+   //                       DispatchQueue.global(qos: .userInitiated).async{ [weak self] in
+   //                           let urlContent = try? Data(contentsOf: url)
+   //                           DispatchQueue.main.async {
+   //                               if let imageData = urlContent , url == self?.imageURL {
+   //                                print(UIImage(data:imageData))
+   //                                cell.uiImage.image = UIImage(data: imageData)
+   //                                self?.imageGalleryView.setNeedsDisplay()
+   //                                self?.imageGalleryView.setNeedsLayout()
+   //                               }
+   //                           }
+   //                       }
+   //
+   //                   }
+   //        }
+
+
+//-----------------------------------------------------------------------------------
+
+
+
+//                                if let image = provider as? UIImage {
+                 //                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self.images[self.DictionaryKey]!.insert(image, at: insertionIndexPath.item)
+                 //                                    }
+                 //                                }else{
+                 //                                    placeHolderContext.deletePlaceholder()
+                 //                                }
