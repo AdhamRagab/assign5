@@ -53,10 +53,13 @@ class ImageGalleryCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var uiImage: UIImageView!{
         didSet{
+        
+          
             setNeedsDisplay()
             setNeedsLayout()
         }
     }
     
+  
     
 }

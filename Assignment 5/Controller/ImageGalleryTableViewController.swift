@@ -70,8 +70,8 @@ class ImageGalleryTableViewController: UITableViewController {
               alert.addAction(UIAlertAction(title: "Submit change", style: .default, handler: { (action) in
                   if let tf = alert.textFields?.first {
                     if let indexPath = self.index{
-                    self.tableSections[0][indexPath.row] = tf.text!
-//                      NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
+                        print(self.tableSections[0][indexPath.row])
+                        self.tableSections[indexPath.section][indexPath.row] = tf.text!
                       self.tableView.reloadData()
                     }
                   }
@@ -100,49 +100,37 @@ class ImageGalleryTableViewController: UITableViewController {
         return tableSections[section].count
     }
     
+   
+   
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ImageGalleryCell", for: indexPath)
         
         let gallery = tableSections[indexPath.section][indexPath.row]
         
-        cell.textLabel?.text = gallery as? String
+        cell.textLabel?.text = gallery
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
                tap.numberOfTapsRequired = 2
                cell.addGestureRecognizer(tap)
         
-        
         return cell
     }
     
-    //    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //        switch tableSections[0][indexPath.row] {
-    //        case "Space":
-    //            galleryController.DictionaryKey = "Space"
-    //        case "Fields":
-    //            galleryController.DictionaryKey = "Fields"
-    //        case "FootballPlayers":
-    //            galleryController.DictionaryKey = "FootballPlayers"
-    //        default:
-    //            break
-    //        }
-    //
+   
     
-    //    }
-    
-    /*
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
      // Return false if you do not want the specified item to be editable.
      return true
      }
-     */
+     
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if indexPath.section == 0 {
-                deletedItem = (tableSections[0][indexPath.row] as? String)!
+                deletedItem = tableSections[0][indexPath.row]
                 tableSections[0].remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 tableSections[1] += [deletedItem]
@@ -162,7 +150,7 @@ class ImageGalleryTableViewController: UITableViewController {
         
         if indexPath.section == 1 {
             let recover = UIContextualAction(style: .normal, title: "Recover") { (contextualAction, view, actionPerformed: (Bool) -> ()) in
-                self.recoveredItem = (self.tableSections[1][indexPath.row] as? String)!
+                self.recoveredItem = self.tableSections[1][indexPath.row]
                 self.tableSections[1].remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 self.tableSections[0] += [self.recoveredItem]
@@ -190,7 +178,6 @@ class ImageGalleryTableViewController: UITableViewController {
      }
      */
     
-    
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -207,6 +194,7 @@ class ImageGalleryTableViewController: UITableViewController {
                 }
             }
         }
+      
     }
     
     

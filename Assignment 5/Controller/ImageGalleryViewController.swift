@@ -40,40 +40,40 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     //            scrollViewWidth.constant = scrollView.contentSize.width
     //        }
     
-    var imageGalleryBackgroundImage: UIImage? {
-        get {
-            // Image is stored in emojiArtView
-            return imageGalleryView.backgroundImage
-        }
-        set {
-            // Reset zoomScale
-            scrollView?.zoomScale = 1.0
-            
-            // Setup background image
-            imageGalleryView.backgroundImage = newValue
-            
-            // Setup appropriate size
-            let size = newValue?.size ?? CGSize.zero
-            
-            // Frame starting at CGPoint.zero
-            imageGalleryView.frame = CGRect(origin: CGPoint.zero, size: size)
-            
-            // Setup scrolling size
-            scrollView?.contentSize = size
-            
-            // Setup constraints of scrollView to properly fit the image's size
-            scrollViewHeight?.constant = size.height
-            scrollViewWidth?.constant = size.width
-            
-            // If appropriate, setup zoomScale
-            if let dropZone = self.dropZone, size.width > 0, size.height > 0 {
-                scrollView?.zoomScale = max(
-                    dropZone.bounds.size.width / size.width,
-                    dropZone.bounds.size.height / size.height
-                )
-            }
-        }
-    }
+//    var imageGalleryBackgroundImage: UIImage? {
+//        get {
+//            // Image is stored in emojiArtView
+//            return imageGalleryView.backgroundImage
+//        }
+//        set {
+//            // Reset zoomScale
+//            scrollView?.zoomScale = 1.0
+//
+//            // Setup background image
+//            imageGalleryView.backgroundImage = newValue
+//
+//            // Setup appropriate size
+//            let size = newValue?.size ?? CGSize.zero
+//
+//            // Frame starting at CGPoint.zero
+//            imageGalleryView.frame = CGRect(origin: CGPoint.zero, size: size)
+//
+//            // Setup scrolling size
+//            scrollView?.contentSize = size
+//
+//            // Setup constraints of scrollView to properly fit the image's size
+//            scrollViewHeight?.constant = size.height
+//            scrollViewWidth?.constant = size.width
+//
+//            // If appropriate, setup zoomScale
+//            if let dropZone = self.dropZone, size.width > 0, size.height > 0 {
+//                scrollView?.zoomScale = max(
+//                    dropZone.bounds.size.width / size.width,
+//                    dropZone.bounds.size.height / size.height
+//                )
+//            }
+//        }
+//    }
     
 //    var images = ["FootballPlayers":[#imageLiteral(resourceName: "mosalah.jpg"),#imageLiteral(resourceName: "messi.jpg"),#imageLiteral(resourceName: "ibra.jpg"),#imageLiteral(resourceName: "cr7.jpg"),#imageLiteral(resourceName: "son.jpg")],
 //                  "Fields":[#imageLiteral(resourceName: "field1-1.jpg"),#imageLiteral(resourceName: "field2.jpg"),#imageLiteral(resourceName: "field3.jpg"),#imageLiteral(resourceName: "field4.jpg"),#imageLiteral(resourceName: "field5.jpg")]
@@ -101,9 +101,9 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         
         
-        imageFetcher = ImageFetcher() { (url,image) in
-            DispatchQueue.main.async{self.imageGalleryBackgroundImage = image}
-        }
+//        imageFetcher = ImageFetcher() { (url,image) in
+//            DispatchQueue.main.async{self.imageGalleryBackgroundImage = image}
+//        }
         
         session.loadObjects(ofClass: NSURL.self) { (nsurls) in
             if let url = nsurls.first as? URL {
@@ -153,6 +153,10 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             imageGalleryCollectionView.dropDelegate = self
         }
     }
+    @objc func RecognizePinchGesture(sender:UIPinchGestureRecognizer){
+                              sender.view?.transform = ((sender.view?.transform.scaledBy(x: sender.scale, y: 0))!)
+                              sender.scale = 1.0
+                          }
     var imageURL : URL?
     var DictionaryKey = String() {
         didSet{
@@ -197,6 +201,13 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
         return cell
         
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let size = CGSize(width: (collectionView.frame.width), height: collectionView.frame.height / (gallery.gallery?[DictionaryKey]?[indexPath.row].getImageRatio())!  )
+        return size
+    }
+    
+   
     
     
     
@@ -264,6 +275,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                                 return
                         }
                             
+                            print(image.getImageRatio())
+                            
                             // If by the time the async. fetch finishes, the imageURL is still the same, update the UI (in the main queue)
                             DispatchQueue.main.async {
                                 collectionView.performBatchUpdates({
@@ -306,13 +319,14 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
 }
 
 extension UIImage {
-    func getImageRatio() -> CGFloat{
+    func getImageRatio() -> CGFloat?{
         let imageRatio = CGFloat(self.size.width/self.size.height)
         return imageRatio
     }
     
     
 }
+
 
 
 
