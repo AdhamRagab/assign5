@@ -127,18 +127,19 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        textFieldObserver = NotificationCenter.default.addObserver(
-            forName: UITextField.textDidChangeNotification,
-            object: nil,
-            queue: OperationQueue.main,
-            using: {(notification) in
-                if let info  = notification.userInfo?.values.first {
-                    print(info)
-//                    self.images[info as! String] = []
-//                    print(self.images)
-                    self.gallery.gallery?[info as! String] = []
-                }
-        })
+//        textFieldObserver = NotificationCenter.default.addObserver(
+//            forName: UITextField.textDidChangeNotification,
+//            object: nil,
+//            queue: OperationQueue.main,
+//            using: {(notification) in
+//                if let info  = notification.userInfo?.values.first {
+//                    print(info)
+////                    self.images[info as! String] = []
+////                    print(self.images)
+//                    self.gallery.gallery?[info as! String] = []
+//                    print(self.gallery.gallery)
+//                }
+//        })
     }
     
     
@@ -155,10 +156,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     var imageURL : URL?
     var DictionaryKey = String() {
         didSet{
-            print(DictionaryKey)
             if let dictcount = gallery.gallery?[DictionaryKey]?.count {
                 tableCount = dictcount
-                print(tableCount)
             }
         }
     }
@@ -234,8 +233,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             if let sourceIndexPath = item.sourceIndexPath{
                 if let image = item.dragItem.localObject as? UIImage {
                     collectionView.performBatchUpdates({
-                        print(sourceIndexPath)
-                        print(destinationIndexPath)
+                       
                         gallery.gallery?[DictionaryKey]?.remove(at: sourceIndexPath.item)
                         
                         gallery.gallery?[DictionaryKey]?.insert(image, at: destinationIndexPath.item)
@@ -271,7 +269,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                                 collectionView.performBatchUpdates({
                                     placeHolderContext.commitInsertion { (insertionIndexPath) in self?.gallery.gallery?[self!.DictionaryKey]?.insert( image , at: insertionIndexPath.item)
                                         self?.tableCount += 1
-                                        print(self?.gallery.gallery)
+//                                        print(self?.gallery.gallery)
                                         coordinator.drop(item.dragItem, toItemAt: insertionIndexPath)
                                     }
                                     

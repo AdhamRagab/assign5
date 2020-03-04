@@ -12,7 +12,7 @@ class ImageGalleryTableViewController: UITableViewController {
     
     let galleryController = ImageGalleryViewController()
     
-    
+    var newGallery : String?
     @IBAction func AddItem(_ sender: UIBarButtonItem) {
         
         
@@ -25,7 +25,8 @@ class ImageGalleryTableViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Add gallery", style: .default, handler: { (action) in
             if let tf = alert.textFields?.first {
                 self.tableSections[0] += [tf.text!]
-                NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
+//                NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
+                self.newGallery = tf.text
                 self.tableView.reloadData()
             }
         }))
@@ -57,8 +58,9 @@ class ImageGalleryTableViewController: UITableViewController {
         
        
     }
-    
+    var index : IndexPath?
     @objc func doubleTapped(){
+        
         let alert = UIAlertController(title: "Change Gallery's Name", message: "Please change the gallery's name or cancel", preferredStyle: .alert)
               
               alert.addTextField { (textField) in
@@ -67,9 +69,11 @@ class ImageGalleryTableViewController: UITableViewController {
               
               alert.addAction(UIAlertAction(title: "Submit change", style: .default, handler: { (action) in
                   if let tf = alert.textFields?.first {
-                      self.tableSections[0] += [tf.text!]
-                      NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
+                    if let indexPath = self.index{
+                    self.tableSections[0][indexPath.row] = tf.text!
+//                      NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
                       self.tableView.reloadData()
+                    }
                   }
               }))
               
@@ -196,6 +200,9 @@ class ImageGalleryTableViewController: UITableViewController {
                 if let cvc = segue.destination as? ImageGalleryViewController{
                     cvc.gallery.gallery = ["FootballPlayers":[#imageLiteral(resourceName: "mosalah.jpg"),#imageLiteral(resourceName: "messi.jpg"),#imageLiteral(resourceName: "ibra.jpg"),#imageLiteral(resourceName: "cr7.jpg"),#imageLiteral(resourceName: "son.jpg")],
                            "Fields":[#imageLiteral(resourceName: "field1"),#imageLiteral(resourceName: "field2.jpg"),#imageLiteral(resourceName: "field3.jpg"),#imageLiteral(resourceName: "field4.jpg"),#imageLiteral(resourceName: "field5.jpg")]]
+                    if self.newGallery != nil {
+                        cvc.gallery.gallery?[newGallery!] = []
+                    }
                     cvc.DictionaryKey = galleryName.text ?? ""
                 }
             }
