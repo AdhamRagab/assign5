@@ -37,9 +37,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="showDetail" identifier="ChooseGallery" id="04H-LJ-z7F"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -54,6 +51,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="ShowImageGallery" id="6Aa-Eh-S5v"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LwG-Ly-USX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -70,8 +70,21 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M88-y7-kkA">
                                 <rect key="frame" x="0.0" y="0.0" width="791.5" height="834"/>
                                 <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gZ9-He-WB3">
-                                        <rect key="frame" x="0.0" y="0.0" width="792" height="834"/>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="792" placeholderIntrinsicHeight="834" translatesAutoresizingMaskIntoConstraints="NO" id="gZ9-He-WB3">
+                                        <rect key="frame" x="20" y="20" width="791.5" height="814"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YkC-ZD-kdn">
+                                                <rect key="frame" x="20" y="0.0" width="771.5" height="814"/>
+                                            </imageView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="YkC-ZD-kdn" firstAttribute="trailing" secondItem="JRE-GU-2VT" secondAttribute="trailing" id="930-mw-38o"/>
+                                            <constraint firstItem="YkC-ZD-kdn" firstAttribute="trailing" secondItem="gZ9-He-WB3" secondAttribute="trailing" constant="-0.5" id="Hn9-MT-Mas"/>
+                                            <constraint firstItem="YkC-ZD-kdn" firstAttribute="bottom" secondItem="gZ9-He-WB3" secondAttribute="bottom" id="Pue-XI-LOH"/>
+                                            <constraint firstItem="YkC-ZD-kdn" firstAttribute="top" secondItem="JRE-GU-2VT" secondAttribute="top" id="n1J-7h-gDo"/>
+                                            <constraint firstItem="YkC-ZD-kdn" firstAttribute="leading" secondItem="gZ9-He-WB3" secondAttribute="leading" constant="20" symbolic="YES" id="u1W-cw-peP"/>
+                                            <constraint firstItem="YkC-ZD-kdn" firstAttribute="centerY" secondItem="gZ9-He-WB3" secondAttribute="centerY" id="vWM-3Q-irq"/>
+                                        </constraints>
                                         <viewLayoutGuide key="contentLayoutGuide" id="FEe-Uw-TzI"/>
                                         <viewLayoutGuide key="frameLayoutGuide" id="JRE-GU-2VT"/>
                                     </scrollView>
@@ -87,8 +100,8 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="q0c-Wi-3q2" firstAttribute="bottom" secondItem="M88-y7-kkA" secondAttribute="bottom" id="Ml0-pJ-kLi"/>
-                            <constraint firstItem="q0c-Wi-3q2" firstAttribute="trailing" secondItem="M88-y7-kkA" secondAttribute="trailing" id="dfv-E0-GP2"/>
+                            <constraint firstItem="M88-y7-kkA" firstAttribute="bottom" secondItem="q0c-Wi-3q2" secondAttribute="bottom" id="Ml0-pJ-kLi"/>
+                            <constraint firstItem="M88-y7-kkA" firstAttribute="trailing" secondItem="q0c-Wi-3q2" secondAttribute="trailing" id="dfv-E0-GP2"/>
                             <constraint firstItem="M88-y7-kkA" firstAttribute="leading" secondItem="q0c-Wi-3q2" secondAttribute="leading" id="rYr-bk-jXD"/>
                             <constraint firstItem="M88-y7-kkA" firstAttribute="top" secondItem="q0c-Wi-3q2" secondAttribute="top" id="rsn-N9-J7f"/>
                         </constraints>
@@ -232,6 +245,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="04H-LJ-z7F"/>
+        <segue reference="6Aa-Eh-S5v"/>
     </inferredMetricsTieBreakers>
 </document>

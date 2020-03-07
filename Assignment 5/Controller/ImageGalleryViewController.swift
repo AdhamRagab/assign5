@@ -127,19 +127,19 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        textFieldObserver = NotificationCenter.default.addObserver(
-//            forName: UITextField.textDidChangeNotification,
-//            object: nil,
-//            queue: OperationQueue.main,
-//            using: {(notification) in
-//                if let info  = notification.userInfo?.values.first {
-//                    print(info)
-////                    self.images[info as! String] = []
-////                    print(self.images)
-//                    self.gallery.gallery?[info as! String] = []
-//                    print(self.gallery.gallery)
-//                }
-//        })
+        textFieldObserver = NotificationCenter.default.addObserver(
+            forName: UITextField.textDidChangeNotification,
+            object: nil,
+            queue: OperationQueue.main,
+            using: {(notification) in
+                if let info  = notification.userInfo?.values.first {
+                    print(info)
+//                    self.images[info as! String] = []
+//                    print(self.images)
+                    self.gallery.gallery?[info as! String] = []
+                    
+                }
+        })
     }
     
     
