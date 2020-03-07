@@ -131,7 +131,7 @@
                                         <rect key="frame" x="20" y="20" width="791.5" height="814"/>
                                         <subviews>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="si3-1P-zRt">
-                                                <rect key="frame" x="20" y="20" width="750" height="794"/>
+                                                <rect key="frame" x="-1" y="0.0" width="785" height="814"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ww2-fl-aer">
                                                     <size key="itemSize" width="150" height="140"/>
@@ -167,7 +167,7 @@
                                                             <segue destination="ChK-gm-OQT" kind="show" identifier="ShowImage" id="VR9-jG-03h"/>
                                                         </connections>
                                                     </collectionViewCell>
-                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="DropPlaceHolderCell" id="iHy-Ew-uGQ">
+                                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="DropPlaceHolderCell" translatesAutoresizingMaskIntoConstraints="NO" id="iHy-Ew-uGQ">
                                                         <rect key="frame" x="160" y="0.0" width="151" height="145"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Npi-zx-g5G">
@@ -190,10 +190,10 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="si3-1P-zRt" firstAttribute="trailing" secondItem="8i3-py-8lT" secondAttribute="trailing" constant="-21.5" id="7Qh-Zv-gCA"/>
+                                            <constraint firstItem="si3-1P-zRt" firstAttribute="trailing" secondItem="8i3-py-8lT" secondAttribute="trailing" constant="-7.5" id="7Qh-Zv-gCA"/>
                                             <constraint firstItem="si3-1P-zRt" firstAttribute="bottom" secondItem="8i3-py-8lT" secondAttribute="bottom" id="ReC-Fb-PId"/>
-                                            <constraint firstItem="si3-1P-zRt" firstAttribute="top" secondItem="8i3-py-8lT" secondAttribute="top" constant="20" symbolic="YES" id="Wrg-yt-Kv2"/>
-                                            <constraint firstItem="si3-1P-zRt" firstAttribute="leading" secondItem="8i3-py-8lT" secondAttribute="leading" constant="20" symbolic="YES" id="e6s-v7-c35"/>
+                                            <constraint firstItem="si3-1P-zRt" firstAttribute="top" secondItem="8i3-py-8lT" secondAttribute="top" id="Wrg-yt-Kv2"/>
+                                            <constraint firstItem="si3-1P-zRt" firstAttribute="leading" secondItem="8i3-py-8lT" secondAttribute="leading" constant="-1" id="e6s-v7-c35"/>
                                         </constraints>
                                     </view>
                                 </subviews>

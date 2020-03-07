@@ -65,6 +65,7 @@ class ImageGalleryTableViewController: UITableViewController {
     @objc func doubleTapped(){
         
         let alert = UIAlertController(title: "Change Gallery's Name", message: "Please change the gallery's name or cancel", preferredStyle: .alert)
+<<<<<<< HEAD
         
         alert.addTextField { (textField) in
             textField.placeholder = "change the name of the  gallery"
@@ -86,6 +87,26 @@ class ImageGalleryTableViewController: UITableViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         present(alert, animated: true, completion: nil)
+=======
+              
+              alert.addTextField { (textField) in
+                  textField.placeholder = "change the name of the  gallery"
+              }
+              
+              alert.addAction(UIAlertAction(title: "Submit change", style: .default, handler: { (action) in
+                  if let tf = alert.textFields?.first {
+                    if let indexPath = self.index{
+                        print(self.tableSections[0][indexPath.row])
+                        self.tableSections[indexPath.section][indexPath.row] = tf.text!
+                      self.tableView.reloadData()
+                    }
+                  }
+              }))
+              
+              alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+              
+              present(alert, animated: true, completion: nil)
+>>>>>>> 9215b303d81038cfbcf65d3336229ca77b61e95b
     }
     var tableSections = [ ["FootballPlayers","Fields"] , [] ]
     // MARK: - Table view data source
@@ -106,7 +127,12 @@ class ImageGalleryTableViewController: UITableViewController {
         return tableSections[section].count
     }
     
+<<<<<<< HEAD
     
+=======
+   
+   
+>>>>>>> 9215b303d81038cfbcf65d3336229ca77b61e95b
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ImageGalleryCell", for: indexPath)
@@ -116,12 +142,18 @@ class ImageGalleryTableViewController: UITableViewController {
         cell.textLabel?.text = gallery
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+<<<<<<< HEAD
         tap.numberOfTapsRequired = 2
         cell.addGestureRecognizer(tap)
+=======
+               tap.numberOfTapsRequired = 2
+               cell.addGestureRecognizer(tap)
+>>>>>>> 9215b303d81038cfbcf65d3336229ca77b61e95b
         
         return cell
     }
     
+<<<<<<< HEAD
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         performSegue(withIdentifier: "ShowImageGallery", sender: tableView.cellForRow(at: indexPath))
@@ -129,14 +161,16 @@ class ImageGalleryTableViewController: UITableViewController {
     
     
     
+=======
+   
+>>>>>>> 9215b303d81038cfbcf65d3336229ca77b61e95b
     
-    /*
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
      // Return false if you do not want the specified item to be editable.
      return true
      }
-     */
+     
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -190,7 +224,6 @@ class ImageGalleryTableViewController: UITableViewController {
      }
      */
     
-    
     // MARK: - Navigation
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -217,6 +250,7 @@ class ImageGalleryTableViewController: UITableViewController {
                 }
             }
         }
+      
     }
     
     
