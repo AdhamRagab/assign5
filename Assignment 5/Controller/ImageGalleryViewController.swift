@@ -151,12 +151,34 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             imageGalleryCollectionView.dataSource = self
             imageGalleryCollectionView.dragDelegate = self
             imageGalleryCollectionView.dropDelegate = self
+            if let layout = imageGalleryCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                layout.minimumInteritemSpacing = 1
+                layout.minimumLineSpacing = 1
+            }
+            imageGalleryCollectionView.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(scaleCollectionViewCells(with:))))
         }
+        
+        
     }
-    @objc func RecognizePinchGesture(sender:UIPinchGestureRecognizer){
-                              sender.view?.transform = ((sender.view?.transform.scaledBy(x: sender.scale, y: 0))!)
-                              sender.scale = 1.0
-                          }
+    
+    
+    private var scaleForCollectionViewCell: CGFloat = 1.0
+      @objc func scaleCollectionViewCells(with recognizer: UIPinchGestureRecognizer) {
+          switch recognizer.state {
+          case .changed, .ended:
+              scaleForCollectionViewCell *= recognizer.scale
+              recognizer.scale = 0.5
+              imageGalleryCollectionView.collectionViewLayout.invalidateLayout()
+          default:
+              break
+          }
+      }
+    
+    
+//    @objc func RecognizePinchGesture(sender:UIPinchGestureRecognizer){
+//                              sender.view?.transform = ((sender.view?.transform.scaledBy(x: sender.scale, y: 0))!)
+//                              sender.scale = 1.0
+//                          }
     var imageURL : URL?
     var DictionaryKey = String() {
         didSet{
@@ -264,7 +286,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                     
                     if let url = provider as? URL {
                         
-                        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                        DispatchQueue.global().async { [weak self] in
                             guard let data = try? Data(contentsOf: url.imageURL) else {
                                 return
                             }
