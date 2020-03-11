@@ -11,52 +11,44 @@ import UIKit
 class ImageGalleryTableViewController: UITableViewController {
     
     let galleryController = ImageGalleryViewController()
+    let K = Constants()
     
     var newGallery : String?
-    @IBAction func AddItem(_ sender: UIBarButtonItem) {
-        
-        
-        let alert = UIAlertController(title: "Add new gallery", message: "Please enter the name of the gallery", preferredStyle: .alert)
-        
-        alert.addTextField { (textField) in
-            textField.placeholder = "Enter the name of the new gallery"
-        }
-        
-        alert.addAction(UIAlertAction(title: "Add gallery", style: .default, handler: { (action) in
-            if let tf = alert.textFields?.first {
-                self.tableSections[0] += [tf.text!]
-                //                NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
-                self.newGallery = tf.text
-                self.tableView.reloadData()
-            }
-        }))
-        
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
-        present(alert, animated: true, completion: nil)
-        
-        
-        
-        //        tableSections[0] += ["Image Gallery".madeUnique(withRespectTo: tableSections[0] as! [String])]
-        //        let newItem = tableSections[0].last
-        //        print(newItem!)
-        //        galleryController.gallery.gallery?[newItem as! String] = []
-        //
-        //        print(gallery.gallery?[(tableSections[0].last as? String)!])
-        //        tableView.reloadData()
-        
-    }
-    
     var deletedItem = ""
     var recoveredItem = ""
     var tfg = UITextField()
     var edited = false
     var oldValue = ""
+    var tableSections = [ [] , [] ]
+    
+    
+    @IBAction func AddItem(_ sender: UIBarButtonItem) {
+        
+        let alert = UIAlertController(title: Constants.AddNewGallery ,
+                                      message: Constants.PleaseEnterGalleryName ,
+                                      preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = Constants.EnterGalleryName
+        }
+        alert.addAction(UIAlertAction(title: Constants.AddAction , style: .default, handler: { (action) in
+            if let tf = alert.textFields?.first {
+                self.tableSections[0] += [tf.text!]
+                self.newGallery = tf.text
+                self.tableView.reloadData()
+            }
+        }))
+        alert.addAction(UIAlertAction(title: Constants.Cancel, style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
+        
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Image Galleries"
+        self.title = Constants.ImageGalleries
         navigationController?.navigationBar.prefersLargeTitles = true
         
         
@@ -64,47 +56,49 @@ class ImageGalleryTableViewController: UITableViewController {
     
     @objc func doubleTapped(){
         
-        let alert = UIAlertController(title: "Change Gallery's Name", message: "Please change the gallery's name or cancel", preferredStyle: .alert)
+        let alert = UIAlertController(title: Constants.ChangeGalleryName, message: Constants.PleaseChangeName , preferredStyle: .alert)
         
         alert.addTextField { (textField) in
-            textField.placeholder = "change the name of the  gallery"
+            textField.placeholder = Constants.ChangeNamePlaceHolder
         }
         
-        alert.addAction(UIAlertAction(title: "Submit change", style: .default, handler: { (action) in
-            
-            if let tf = alert.textFields?.first {
-                
-                self.tfg.text = tf.text
-                self.edited = true
-                if self.edited {
-                    if let index = self.tableView.indexPathForSelectedRow?.row{
-                        print(index)
-                        self.oldValue = self.tableSections[0][index] as! String
-                        self.tableSections[0][index] = self.tfg.text!
-                        print(self.oldValue); self.galleryController.gallery.gallery?.switchKey(fromKey: self.oldValue , toKey: self.tfg.text! )
-                        self.edited = false
-                        self.tableView.reloadData()
-                    }
-                }
-                
-                
-                
-                //                      NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: nil, userInfo: [tf : tf.text!])
-                
-            }
+        alert.addAction(UIAlertAction(title: Constants.ChangeAction , style: .default, handler: { (action) in
+            self.ChangeGalleryName(alert)
         })
         )
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: Constants.Cancel , style: .cancel, handler: nil))
         
         present(alert, animated: true, completion: nil)
     }
-    var tableSections = [ [] , [] ]
+    
+    func ChangeGalleryName(_ alert: UIAlertController ){
+        
+        if let tf = alert.textFields?.first {
+            self.tfg.text = tf.text
+            self.edited = true
+            if self.edited {
+                if let index = self.tableView.indexPathForSelectedRow?.row{
+                    SwitchKey(of: index)
+                }
+            }
+            
+        }
+    }
+    
+    func SwitchKey(of index: Int){
+        self.oldValue = self.tableSections[0][index] as! String
+        self.tableSections[0][index] = self.tfg.text!
+        self.galleryController.galleryModel.gallery?.switchKey(fromKey: self.oldValue , toKey: self.tfg.text! )
+        self.edited = false
+        self.tableView.reloadData()
+    }
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel()
-        label.text = section == 0 ? "Image Galleries" : "Deleted Image Galleries"
+        label.text = section == 0 ? Constants.ImageGalleries : Constants.DeletedImageGalleries
         label.backgroundColor = UIColor.lightGray
         return label
     }
@@ -114,74 +108,57 @@ class ImageGalleryTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return tableSections[section].count
     }
     
     
-    
-    
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ImageGalleryCell", for: indexPath)
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ImageGalleryCell, for: indexPath)
         let gallery = tableSections[indexPath.section][indexPath.row]
+        cell.textLabel?.text = gallery as? String
+        addDoubleTapGesture(to: cell)
+        return cell
         
-        cell.textLabel?.text = gallery as! String
+    }
+    
+    func addDoubleTapGesture(to cell : UITableViewCell){
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         tap.numberOfTapsRequired = 2
         cell.addGestureRecognizer(tap)
         
-        
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        performSegue(withIdentifier: "ShowImageGallery", sender: tableView.cellForRow(at: indexPath))
+        performSegue(withIdentifier: Constants.ShowImageGallery, sender: tableView.cellForRow(at: indexPath))
     }
-    
-    
-    
-    
-    
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if indexPath.section == 0 {
-                deletedItem = tableSections[0][indexPath.row] as! String
-                tableSections[0].remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                tableSections[1] += [deletedItem]
-                tableView.reloadData()
-            }else {
-                tableSections[1].remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-            }
-            
-            
-        } else if editingStyle == .insert {
-            //
+            indexPath.section == 0 ? MoveGalleryToTrash(at: indexPath) : DeleteGallery(at: indexPath)
         }
+    }
+    
+    func DeleteGallery(at indexPath : IndexPath){
+        tableSections[1].remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+    }
+    
+    func MoveGalleryToTrash(at indexPath: IndexPath){
+        deletedItem = tableSections[0][indexPath.row] as! String
+        tableSections[0].remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        tableSections[1] += [deletedItem]
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         if indexPath.section == 1 {
-            let recover = UIContextualAction(style: .normal, title: "Recover") { (contextualAction, view, actionPerformed: (Bool) -> ()) in
-                self.recoveredItem = self.tableSections[1][indexPath.row] as! String
-                self.tableSections[1].remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                self.tableSections[0] += [self.recoveredItem]
-                tableView.reloadData()
+            let recover = UIContextualAction(style: .normal, title: Constants.Recover ) { (contextualAction, view, actionPerformed: (Bool) -> ()) in
+                self.RecoverRow(at :indexPath)
             }
             return UISwipeActionsConfiguration(actions: [recover])
         }else {
@@ -189,36 +166,24 @@ class ImageGalleryTableViewController: UITableViewController {
         }
     }
     
+    func RecoverRow(at indexPath: IndexPath){
+        self.recoveredItem = self.tableSections[1][indexPath.row] as! String
+        self.tableSections[1].remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        self.tableSections[0] += [self.recoveredItem]
+        tableView.reloadData()
+    }
     
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
     
     // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowImageGallery" {
+        if segue.identifier == Constants.ShowImageGallery {
             if let galleryName = (sender as? UITableViewCell)?.textLabel {
                 if let cvc = segue.destination as? ImageGalleryViewController{
-                    cvc.gallery.gallery = [:]
+                    cvc.galleryModel.gallery = [:]
                     if self.newGallery != nil {
-                        cvc.gallery.gallery?[newGallery!] = []
+                        cvc.galleryModel.gallery?[newGallery!] = []
                     }
-                    
-                    
                     cvc.DictionaryKey = galleryName.text ?? ""
                 }
             }
@@ -226,14 +191,14 @@ class ImageGalleryTableViewController: UITableViewController {
         
     }
     
-    
-    
     override func viewWillLayoutSubviews() {
         if splitViewController?.preferredDisplayMode != .primaryOverlay {
             splitViewController?.preferredDisplayMode = .primaryOverlay
         }
     }
 }
+
+
 
 extension Dictionary {
     mutating func switchKey(fromKey: Key, toKey: Key) {

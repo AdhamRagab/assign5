@@ -163,7 +163,7 @@
                                                         </collectionViewCellContentView>
                                                         <size key="customSize" width="150" height="140"/>
                                                         <connections>
-                                                            <outlet property="uiImage" destination="7ue-Ya-J7l" id="PYo-PI-kIa"/>
+                                                            <outlet property="uiImageView" destination="7ue-Ya-J7l" id="PYo-PI-kIa"/>
                                                             <segue destination="ChK-gm-OQT" kind="show" identifier="ShowImage" id="VR9-jG-03h"/>
                                                         </connections>
                                                     </collectionViewCell>
@@ -245,6 +245,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="6Aa-Eh-S5v"/>
+        <segue reference="PQy-v5-5ow"/>
     </inferredMetricsTieBreakers>
 </document>

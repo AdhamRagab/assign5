@@ -29,32 +29,20 @@ class ImageGalleryCollectionViewCell: UICollectionViewCell {
                 print(url.imageURL)
                   return
               }
-
-              // If by the time the async. fetch finishes, the imageURL is still the same, update the UI (in the main queue)
+            
             if self?.url == url {
                   DispatchQueue.main.async {
-                      self?.uiImage.image = image
+                      self?.uiImageView.image = image
                       
                   }
               }
           }
       }
     
-//    var image : UIImage?{
-//        get {
-//            return uiImage.image
-//        }
-//        set{
-//            uiImage.image = newValue-
-//            uiImage.sizeToFit()
-//
-//        }
-//    }
+
     
-    @IBOutlet weak var uiImage: UIImageView!{
+    @IBOutlet  weak var uiImageView: UIImageView!{
         didSet{
-        
-          
             setNeedsDisplay()
             setNeedsLayout()
         }

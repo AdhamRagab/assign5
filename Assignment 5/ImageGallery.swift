@@ -9,18 +9,11 @@
 import UIKit
 class ImageGallery {
     
+        var name : String?
+        var images : [UIImage]?
     
-    //    var name : String?
-    //    var images : [Image]?
     
-    
-    //    struct Image {
-    //        var name : String?
-    //        var url : URL?
-    //        var image : UIImage?
-    //        var ratio : CGFloat?
-    //    }
-    
+       
     
     var gallery : [String : [UIImage]]?
     
