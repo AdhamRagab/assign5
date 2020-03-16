@@ -11,25 +11,25 @@ import Foundation
 struct Constants {
     
     //MARK: - ImageGalleryViewController
-   static let ImageCellIdentifier = "ImageCell"
-   static let DropPlaceHolderCell = "DropPlaceHolderCell"
-   static let ShowImage = "ShowImage"
+   static let imageCellIdentifier = "ImageCell"
+   static let dropPlaceHolderCell = "DropPlaceHolderCell"
+   static let showImage = "ShowImage"
     
     //MARK: - ImageGalleryTableViewController
-   static let ImageGalleries = "Image Galleries"
-   static let DeletedImageGalleries = "Deleted Image Galleries"
-   static let ImageGalleryCell = "ImageGalleryCell"
-   static let ShowImageGallery = "ShowImageGallery"
-   static let AddNewGallery = "Add new gallery"
-   static let PleaseEnterGalleryName = "Please enter the name of the gallery"
-   static let EnterGalleryName = "Enter the name of the new gallery"
-   static let AddAction = "Add gallery"
-   static let Cancel = "Cancel"
-   static let Recover = "Recover"
+   static let imageGalleries = "Image Galleries"
+   static let deletedImageGalleries = "Deleted Image Galleries"
+   static let imageGalleryCell = "ImageGalleryCell"
+   static let showImageGallery = "ShowImageGallery"
+   static let addNewGallery = "Add new gallery"
+   static let pleaseEnterGalleryName = "Please enter the name of the gallery"
+   static let enterGalleryName = "Enter the name of the new gallery"
+   static let addAction = "Add gallery"
+   static let cancel = "Cancel"
+   static let recover = "Recover"
     
     //MARK: - ChangeNameConstants
-   static let ChangeGalleryName = "Change Gallery's Name"
-   static let PleaseChangeName = "Please change the gallery's name or cancel"
-   static let ChangeNamePlaceHolder = "change the name of the  gallery"
-   static let ChangeAction = "Submit change"
+   static let changeGalleryName = "Change Gallery's Name"
+   static let pleaseChangeName = "Please change the gallery's name or cancel"
+   static let changeNamePlaceHolder = "change the name of the  gallery"
+   static let changeAction = "Submit change"
 }

@@ -24,21 +24,21 @@ class ImageGalleryTableViewController: UITableViewController {
     
     @IBAction func AddItem(_ sender: UIBarButtonItem) {
         
-        let alert = UIAlertController(title: Constants.AddNewGallery ,
-                                      message: Constants.PleaseEnterGalleryName ,
+        let alert = UIAlertController(title: Constants.addNewGallery ,
+                                      message: Constants.pleaseEnterGalleryName ,
                                       preferredStyle: .alert)
         
         alert.addTextField { (textField) in
-            textField.placeholder = Constants.EnterGalleryName
+            textField.placeholder = Constants.enterGalleryName
         }
-        alert.addAction(UIAlertAction(title: Constants.AddAction , style: .default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: Constants.addAction , style: .default, handler: { (action) in
             if let tf = alert.textFields?.first {
                 self.tableSections[0] += [tf.text!]
                 self.newGallery = tf.text
                 self.tableView.reloadData()
             }
         }))
-        alert.addAction(UIAlertAction(title: Constants.Cancel, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: Constants.cancel, style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)
         
     }
@@ -48,7 +48,7 @@ class ImageGalleryTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = Constants.ImageGalleries
+        self.title = Constants.imageGalleries
         navigationController?.navigationBar.prefersLargeTitles = true
         
         
@@ -56,18 +56,18 @@ class ImageGalleryTableViewController: UITableViewController {
     
     @objc func doubleTapped(){
         
-        let alert = UIAlertController(title: Constants.ChangeGalleryName, message: Constants.PleaseChangeName , preferredStyle: .alert)
+        let alert = UIAlertController(title: Constants.changeGalleryName, message: Constants.pleaseChangeName , preferredStyle: .alert)
         
         alert.addTextField { (textField) in
-            textField.placeholder = Constants.ChangeNamePlaceHolder
+            textField.placeholder = Constants.changeNamePlaceHolder
         }
         
-        alert.addAction(UIAlertAction(title: Constants.ChangeAction , style: .default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: Constants.changeAction , style: .default, handler: { (action) in
             self.ChangeGalleryName(alert)
         })
         )
         
-        alert.addAction(UIAlertAction(title: Constants.Cancel , style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: Constants.cancel , style: .cancel, handler: nil))
         
         present(alert, animated: true, completion: nil)
     }
@@ -89,7 +89,7 @@ class ImageGalleryTableViewController: UITableViewController {
     func SwitchKey(of index: Int){
         self.oldValue = self.tableSections[0][index] as! String
         self.tableSections[0][index] = self.tfg.text!
-        self.galleryController.galleryModel.gallery?.switchKey(fromKey: self.oldValue , toKey: self.tfg.text! )
+        self.galleryController.galleryBetterModel.imageGalleries[index].name = self.tfg.text!
         self.edited = false
         self.tableView.reloadData()
     }
@@ -98,10 +98,12 @@ class ImageGalleryTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel()
-        label.text = section == 0 ? Constants.ImageGalleries : Constants.DeletedImageGalleries
+        label.text = section == 0 ? Constants.imageGalleries : Constants.deletedImageGalleries
         label.backgroundColor = UIColor.lightGray
         return label
     }
+    
+    
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return tableSections.count
@@ -114,7 +116,7 @@ class ImageGalleryTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ImageGalleryCell, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.imageGalleryCell, for: indexPath)
         let gallery = tableSections[indexPath.section][indexPath.row]
         cell.textLabel?.text = gallery as? String
         addDoubleTapGesture(to: cell)
@@ -131,7 +133,15 @@ class ImageGalleryTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: Constants.ShowImageGallery, sender: tableView.cellForRow(at: indexPath))
+        performSegue(withIdentifier: Constants.showImageGallery, sender: tableView.cellForRow(at: indexPath))
+    }
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        let cell = sender as! UITableViewCell
+        if let indexPath = tableView.indexPath(for: cell)  {
+            return indexPath.section == 0
+        }else {
+            return false
+        }
     }
     
     // Override to support editing the table view.
@@ -157,7 +167,7 @@ class ImageGalleryTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         if indexPath.section == 1 {
-            let recover = UIContextualAction(style: .normal, title: Constants.Recover ) { (contextualAction, view, actionPerformed: (Bool) -> ()) in
+            let recover = UIContextualAction(style: .normal, title: Constants.recover ) { (contextualAction, view, actionPerformed: (Bool) -> ()) in
                 self.RecoverRow(at :indexPath)
             }
             return UISwipeActionsConfiguration(actions: [recover])
@@ -177,19 +187,25 @@ class ImageGalleryTableViewController: UITableViewController {
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.ShowImageGallery {
+        if segue.identifier == Constants.showImageGallery {
             if let galleryName = (sender as? UITableViewCell)?.textLabel {
                 if let cvc = segue.destination as? ImageGalleryViewController{
-                    cvc.galleryModel.gallery = [:]
-                    if self.newGallery != nil {
-                        cvc.galleryModel.gallery?[newGallery!] = []
-                    }
-                    cvc.DictionaryKey = galleryName.text ?? ""
+                    
+                    cvc.galleryBetterModel.imageGalleries = []
+                    let newImageGallery = ImageGallery()
+                    newImageGallery.name = galleryName.text
+                    newImageGallery.images = []
+                    newImageGallery.identifier = tableView.indexPath(for: (sender as? UITableViewCell)!)!.row
+                    cvc.identifier = tableView.indexPath(for: (sender as? UITableViewCell)!)!.row 
+                    cvc.galleryBetterModel.add(gallery:newImageGallery)
+                    
                 }
             }
         }
         
     }
+    
+   
     
     override func viewWillLayoutSubviews() {
         if splitViewController?.preferredDisplayMode != .primaryOverlay {
@@ -198,12 +214,3 @@ class ImageGalleryTableViewController: UITableViewController {
     }
 }
 
-
-
-extension Dictionary {
-    mutating func switchKey(fromKey: Key, toKey: Key) {
-        if let entry = removeValue(forKey: fromKey) {
-            self[toKey] = entry
-        }
-    }
-}

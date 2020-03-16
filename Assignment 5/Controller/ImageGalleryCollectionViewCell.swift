@@ -33,7 +33,6 @@ class ImageGalleryCollectionViewCell: UICollectionViewCell {
             if self?.url == url {
                   DispatchQueue.main.async {
                       self?.uiImageView.image = image
-                      
                   }
               }
           }

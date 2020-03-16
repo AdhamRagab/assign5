@@ -11,30 +11,21 @@ import UIKit
 
 class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, UIScrollViewDelegate , UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
-    let K = Constants()
+    
+    
+    var galleryBetterModel = ImageGalleryModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
     }
     
+    var identifier : Int?
     private var textFieldObserver: NSObjectProtocol?
     private var tableCount = 0
     private var imageFetcher: ImageFetcher!
     private var scaleForCollectionViewCell: CGFloat = 1.0
     
-    var galleryModel = ImageGallery(){
-        didSet{
-            tableCount = (galleryModel.gallery?[DictionaryKey]!.count)!
-        }
-    }
-    var DictionaryKey = String() {
-        didSet{
-            if let dictcount = galleryModel.gallery?[DictionaryKey]?.count {
-                tableCount = dictcount
-            }
-        }
-    }
     
     
     //MARK: - Drop Zone
@@ -76,10 +67,10 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             object: nil,
             queue: OperationQueue.main,
             using: {(notification) in
-                if let info  = notification.userInfo?.values.first {
-                    self.galleryModel.gallery?[info as! String] = []
-                    
-                }
+//                if let info  = notification.userInfo?.values.first {
+//                    //                    self.galleryModel.gallery?[info as! String] = []
+//
+//                }
         })
     }
     
@@ -125,19 +116,19 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.ImageCellIdentifier, for: indexPath)
-        if let imageCell = cell as? ImageGalleryCollectionViewCell{
-            if let image = galleryModel.gallery?[DictionaryKey]?[indexPath.row]{
-                imageCell.uiImageView.image = image
-            }
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.imageCellIdentifier, for: indexPath)
+        if let imageCell = cell as? ImageGalleryCollectionViewCell , let image = galleryBetterModel.imageGalleries[identifier!].images?[indexPath.item]{
+            imageCell.uiImageView.image = image
         }
         
-        return cell
+        return (cell as? ImageGalleryCollectionViewCell)!
         
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: (collectionView.frame.width), height: collectionView.frame.height / (galleryModel.gallery?[DictionaryKey]?[indexPath.row].getImageRatio())!  )
+        
+        let size = CGSize(width: (collectionView.frame.width), height: collectionView.frame.height / (galleryBetterModel.imageGalleries[identifier!].images?[indexPath.row].getImageRatio())!  )
+        
         return size
     }
     
@@ -164,8 +155,8 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
     }
     
     func ChangeImagePlace (from sourceIndexPath : IndexPath? , to destinationIndexPath : IndexPath? , image : UIImage?){
-        galleryModel.gallery?[DictionaryKey]?.remove(at: sourceIndexPath!.item)
-        galleryModel.gallery?[DictionaryKey]?.insert(image!, at: destinationIndexPath!.item)
+        galleryBetterModel.imageGalleries[identifier!].images?.remove(at: sourceIndexPath!.item)
+        galleryBetterModel.imageGalleries[identifier!].images?.insert(image!, at: destinationIndexPath!.item)
         imageGalleryCollectionView.deleteItems(at: [sourceIndexPath!])
         imageGalleryCollectionView.insertItems(at: [destinationIndexPath!])
     }
@@ -179,36 +170,58 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
                 })
                 coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
             } else {
-                let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: Constants.DropPlaceHolderCell))
-                item.dragItem.itemProvider.loadObject(ofClass: NSURL.self) { [weak self] (provider, error) in
-                    if let url = provider as? URL {
-                        DispatchQueue.global().async { [weak self] in
-                            guard let data = try? Data(contentsOf: url.imageURL), let image = UIImage(data: data) else {
-                                return
-                            }
-                            DispatchQueue.main.async {
-                                collectionView.performBatchUpdates({
-                                    placeHolderContext.commitInsertion { (insertionIndexPath) in self?.galleryModel.gallery?[self!.DictionaryKey]?.insert( image , at: insertionIndexPath.item)
-                                        self?.tableCount += 1
-                                        coordinator.drop(item.dragItem, toItemAt: insertionIndexPath)
-                                    }
-                                })
-                            }
-                        }
-                    }else{
-                        placeHolderContext.deletePlaceholder()
+                
+                dragPhotoFromWebAndFetchIt(with: item, coordinator: coordinator, in: destinationIndexPath)
+                
+            }
+        }
+    }
+    
+    func initPlaceHolderContext (item: UICollectionViewDropItem , coordinator: UICollectionViewDropCoordinator , destinationIndexPath : IndexPath ) -> UICollectionViewDropPlaceholderContext {
+        let placeHolderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: Constants.dropPlaceHolderCell))
+        return placeHolderContext
+    }
+    
+    func dragPhotoFromWebAndFetchIt (with item: UICollectionViewDropItem , coordinator: UICollectionViewDropCoordinator , in destinationIndexPath: IndexPath) {
+        let placeHolderContext = initPlaceHolderContext(item: item, coordinator: coordinator, destinationIndexPath: destinationIndexPath)
+        item.dragItem.itemProvider.loadObject(ofClass: NSURL.self) { [weak self] (provider, error) in
+            
+            if let url = provider as? URL {
+                DispatchQueue.global().async { [weak self] in
+                    guard let image =  self?.galleryBetterModel.fetchImage(withURL: url) else {
+                        return
                     }
+                    self?.dropItemAndUpdateModel(placeHolderContext: placeHolderContext, item: item, coordinator: coordinator, image: image)
                 }
+                
+            }else{
+                placeHolderContext.deletePlaceholder()
             }
         }
     }
     
     
     
+    func dropItemAndUpdateModel(placeHolderContext: UICollectionViewDropPlaceholderContext , item: UICollectionViewDropItem , coordinator: UICollectionViewDropCoordinator , image: UIImage ) {
+        
+        DispatchQueue.main.async {
+            self.imageGalleryCollectionView.performBatchUpdates({
+                placeHolderContext.commitInsertion { (insertionIndexPath) in
+                    self.galleryBetterModel.imageGalleries[self.identifier!].images?.insert(image, at: insertionIndexPath.item)
+                    self.tableCount += 1
+                    coordinator.drop(item.dragItem, toItemAt: insertionIndexPath)
+                    
+                }
+            })
+        }
+        
+    }
+    
+    
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.ShowImage{
+        if segue.identifier == Constants.showImage{
             if let imageViewImage = (sender as? ImageGalleryCollectionViewCell)?.uiImageView.image{
                 if let cvc = segue.destination as? ImageViewController{
                     cvc.image = imageViewImage

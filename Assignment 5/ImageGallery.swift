@@ -11,10 +11,7 @@ class ImageGallery {
     
         var name : String?
         var images : [UIImage]?
+        var identifier : Int = 0
     
-    
-       
-    
-    var gallery : [String : [UIImage]]?
     
 }
