@@ -67,10 +67,7 @@ class ImageGalleryViewController: UIViewController , UIDropInteractionDelegate, 
             object: nil,
             queue: OperationQueue.main,
             using: {(notification) in
-//                if let info  = notification.userInfo?.values.first {
-//                    //                    self.galleryModel.gallery?[info as! String] = []
-//
-//                }
+
         })
     }
     

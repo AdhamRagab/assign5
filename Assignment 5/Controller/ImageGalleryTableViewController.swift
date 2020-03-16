@@ -205,6 +205,8 @@ class ImageGalleryTableViewController: UITableViewController {
         
     }
     
+    
+    
    
     
     override func viewWillLayoutSubviews() {
